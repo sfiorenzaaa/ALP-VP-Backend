@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getSongs, createSong } from "../controllers/songsController";
-import auth from "../middleware/authMiddleware";
+import auth from "../middlewares/auth-middleware";
 
 const router = Router();
 

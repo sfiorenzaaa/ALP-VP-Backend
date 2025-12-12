@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { createJournal, getMyJournals } from "../controllers/journalController";
-import { validate } from "../middleware/validate";
-import { createJournalSchema } from "../validation/journalValidation";
-import auth from "../middleware/authMiddleware";
+import { validate } from "../middlewares/validate";
+import { createJournalSchema } from "../validations/journalValidation";
+import auth from "../middlewares/auth-middleware";
 
 const router = Router();
 
