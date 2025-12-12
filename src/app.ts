@@ -1,6 +1,8 @@
 import express from "express";
 import routes from "./routes";
-import errorHandler from "./middleware/errorHandler";
+import errorHandler from "./middlewares/errorHandler";
+import { publicRouter } from "./routes/public-api";
+import { privateRouter } from "./routes/private-api";
 
 const app = express();
 
@@ -14,8 +16,8 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/api", routes);
-
+app.use("/api", publicRouter);
+app.use("/api", privateRouter)
 app.use(errorHandler);
 
 export default app;

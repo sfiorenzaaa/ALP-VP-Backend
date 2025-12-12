@@ -7,13 +7,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EventStatus {
+  PENDING
+  APPROVE
+  REJECT
+}
+
 model User {
   id        Int      @id @default(autoincrement())
-  name      String
+  username  String
   email     String   @unique
   password  String
-  journals  Journal[]
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
+
+  events   Event[]
+  journals Journal[]
+}
+
+model Event {
+  id          Int         @id @default(autoincrement())
+  title       String
+  description String
+  eventDate   DateTime
+  status      EventStatus
+  createdAt   DateTime    @default(now())
+
+  userId Int 
+  user   User @relation(fields: [userId], references: [id]) 
 }
 
 model Journal {
@@ -25,8 +51,8 @@ model Journal {
 }
 
 model Song {
-  id            Int      @id @default(autoincrement())
-  clue          String   @unique        // ← tambahkan ini
+  id            Int    @id @default(autoincrement())
+  clue          String @unique
   options       Json
   correctAnswer String
 }

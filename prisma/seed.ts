@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role, EventStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -13,11 +13,79 @@ async function main() {
     where: { email: "demo@example.com" },
     update: {},
     create: {
-      name: "Demo User",
+      username: "Demo User",
       email: "demo@example.com",
       password: hashed,
     },
   });
+
+  const admin = await prisma.user.upsert({
+    where: { email: "admin@example.com" },
+    update: { role: Role.ADMIN },
+    create: {
+      username: "Super Admin",
+      email: "admin@example.com",
+      password: hashed,
+      role: Role.ADMIN,
+    },
+  });
+  console.log("Admin created: admin@example.com / password123");
+
+
+  const demoUser = await prisma.user.upsert({
+    where: { email: "demo@example.com" },
+    update: { role: Role.USER },
+    create: {
+      username: "Demo User",
+      email: "demo@example.com",
+      password: hashed,
+      role: Role.USER, 
+    },
+  });
+  console.log("User created: demo@example.com / password123");
+
+
+  const events = [
+    {
+      title: "Grand Music Festival 2025",
+      description: "Konser musik terbesar tahun ini, terbuka untuk umum!",
+      eventDate: new Date("2025-08-17T19:00:00Z"),
+      status: EventStatus.APPROVE, 
+      creatorId: admin.id,
+    },
+    {
+      title: "Komunitas Coding Meetup",
+      description: "Belajar coding bareng di cafe.",
+      eventDate: new Date("2025-09-01T10:00:00Z"),
+      status: EventStatus.PENDING,
+      creatorId: demoUser.id,
+    },
+    {
+      title: "Event Ilegal Tidak Jelas",
+      description: "Deskripsi mencurigakan yang melanggar rules.",
+      eventDate: new Date("2025-12-31T23:59:00Z"),
+      status: EventStatus.REJECT,
+      creatorId: demoUser.id,
+    },
+    {
+      title: "Lomba Makan Kerupuk",
+      description: "Merayakan hari kemerdekaan di RW 05.",
+      eventDate: new Date("2025-08-17T08:00:00Z"),
+      status: EventStatus.APPROVE,
+      creatorId: demoUser.id,
+    },
+  ];
+
+  for (const event of events) {
+    await prisma.event.deleteMany({
+      where: { title: event.title }
+    });
+
+    await prisma.event.create({
+      data: event,
+    });
+  }
+  console.log("Events seeded successfully!");
 
   // SONG QUIZ DATA (20 entries)
   const songs = [
