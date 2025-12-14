@@ -5,6 +5,7 @@ import { adminMiddleware } from "../middlewares/admin-middleware"
 import { Router } from "express"
 import { createSong } from "../services/songsService"
 import journalRoutes from "./journalRoutes"
+import petRoutes from "./pet-routes"
 export const privateRouter = express.Router()
 
 privateRouter.use(authMiddleware)
@@ -21,5 +22,8 @@ router.post("/songs", createSong);
 
 // Journal Routes (Private)
 router.use("/journal", journalRoutes);
+
+// Pet Routes (Private)
+router.use("/pets", petRoutes);
 
 export default router;
