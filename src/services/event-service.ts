@@ -7,8 +7,8 @@ import { includes } from "zod";
 
 
 export class EventService {
-    
-    static async create(user :any, request :any){
+
+    static async create(user: any, request: any) {
         const eventData = Validation.validate(EventValidation.CREATE, request);
 
 
@@ -21,35 +21,35 @@ export class EventService {
             data: {
                 title: eventData.title,
                 description: eventData.description,
-                eventDate: eventData.date, 
+                eventDate: eventData.date,
                 status: "PENDING",
                 userId: user.id
             }
         });
     }
-    static async listPublicEvents(){
+    static async listPublicEvents() {
         return await prismaClient.event.findMany({
             where: {
                 status: "APPROVE",
             },
             include: {
-                user: { select: {username :true}}
+                user: { select: { username: true } }
             }
         });
     }
 
-    static async listMyEvents(userId : number){
+    static async listMyEvents(userId: number) {
         return await prismaClient.event.findMany({
             where: {
-                userId : userId
+                userId: userId
             }
         });
     }
 
-    static async updateStatus(eventId : number, request: any){
+    static async updateStatus(eventId: number, request: any) {
         const data = Validation.validate(EventValidation.UPDATE_STATUS, request);
-        
-        const event = await prismaClient.event.findUnique({ where: {id : eventId} });
+
+        const event = await prismaClient.event.findUnique({ where: { id: eventId } });
         if (!event) throw new ResponseError(404, "Event Not Found");
 
         return await prismaClient.event.update({
@@ -57,8 +57,22 @@ export class EventService {
                 id: eventId,
             },
             data: {
-                status : data.status as EventStatus
+                status: data.status as EventStatus
             },
         });
+    }
+
+    static async listPendingEvents() {
+        return await prismaClient.event.findMany({
+            where: {
+                status: "PENDING"
+            },
+            include: {
+                user: { select: { username: true, email: true } }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
     }
 }

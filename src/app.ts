@@ -6,6 +6,12 @@ import { privateRouter } from "./routes/private-api";
 
 const app = express();
 
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+
 // Manual CORS middleware (no dependency)
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -17,7 +23,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/api", publicRouter);
-app.use("/api", privateRouter)
+app.use("/api", privateRouter);
 app.use(errorHandler);
 
 export default app;
