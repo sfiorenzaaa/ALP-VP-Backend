@@ -10,4 +10,3 @@ publicRouter.get('/events', EventController.listPublic)
 publicRouter.post('/users/login', UserController.login);
 publicRouter.get("/songs", getSongs);
 publicRouter.post("/users", UserController.register);
-publicRouter.post("/users/login", UserController.login)

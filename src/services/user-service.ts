@@ -44,6 +44,12 @@ export class UserService {
             throw new ResponseError(401, "Username or password wrong");
         }
 
+        console.log("=== DEBUG LOGIN ===");
+        console.log("Input Password:", loginRequest.password);
+        console.log("Email dari Android:", loginRequest.email);
+        console.log("DB Password   :", user.password);
+        
+
         const isPasswordValid = await bcrypt.compare(loginRequest.password, user.password);
         if (!isPasswordValid) {
             throw new ResponseError(401, "Username or password wrong");
@@ -51,4 +57,6 @@ export class UserService {
 
         return toUserResponse(user.id, user.username, user.email, user.role);
     }
+
+    
 }

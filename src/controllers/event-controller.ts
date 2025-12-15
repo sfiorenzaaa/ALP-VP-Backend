@@ -32,4 +32,11 @@ export class EventController {
             res.status(200).json({ data : result});
         } catch (e) {next(e);}
     }
+
+    static async listPending(req : Request, res : Response, next : NextFunction){
+        try{
+            const result = await EventService.listPendingEvents();
+            res.status(200).json({data : result});
+        } catch (e) {next(e);}
+    }
 }
