@@ -6,32 +6,23 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding started...");
 
-  // 1. Hash Password
+  // Create demo user
   const hashed = await bcrypt.hash("password123", 10);
 
-  // 2. Buat/Update Demo User (Perbaikan: update password jika user sudah ada)
-  const demoUser = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: "demo@example.com" },
-    update: { 
-      password: hashed, // <--- PENTING: Update password lama yg rusak
-      role: Role.USER 
-    },
+    update: {},
     create: {
       username: "Demo User",
       email: "demo@example.com",
-      password: hashed, // Ini sudah benar
-      role: Role.USER,
+      password: hashed,
     },
   });
-  console.log("User created: demo@example.com");
 
   // 3. Buat/Update Admin
   const admin = await prisma.user.upsert({
     where: { email: "admin@example.com" },
-    update: { 
-      password: hashed, // <--- PENTING: Update password lama yg rusak
-      role: Role.ADMIN 
-    },
+    update: { role: Role.ADMIN },
     create: {
       username: "Super Admin",
       email: "admin@example.com",
@@ -39,9 +30,22 @@ async function main() {
       role: Role.ADMIN,
     },
   });
-  console.log("Admin created: admin@example.com");
+  console.log("Admin created: admin@example.com / password123");
 
-  // 4. Data Events
+
+  const demoUser = await prisma.user.upsert({
+    where: { email: "demo@example.com" },
+    update: { role: Role.USER },
+    create: {
+      username: "Demo User",
+      email: "demo@example.com",
+      password: hashed,
+      role: Role.USER, 
+    },
+  });
+  console.log("User created: demo@example.com / password123");
+
+
   const events = [
     {
       title: "Grand Music Festival 2025",
@@ -73,11 +77,10 @@ async function main() {
     },
   ];
 
-  // for (const event of events) {
-  //   // Hapus event lama biar tidak duplikat error
-  //   await prisma.event.deleteMany({
-  //     where: { title: event.title }
-  //   });
+  for (const event of events) {
+    await prisma.event.deleteMany({
+      where: { title: event.title }
+    });
 
   //   await prisma.event.create({
   //     data: event,
@@ -133,3 +136,4 @@ main()
     await prisma.$disconnect();
     console.log("Seeding finished.");
   });
+}
