@@ -17,7 +17,7 @@ privateRouter.post('/events', EventController.create);
 privateRouter.get('/events/my', EventController.listMine);
 privateRouter.get('/events/pending', adminMiddleware, EventController.listPending);
 privateRouter.patch('/events/:id', adminMiddleware, EventController.approveReject)
-
+privateRouter.post('/events/:id/join', EventController.join);
 privateRouter.post("/songs", createSong);
 
 // Journal Routes (Private)

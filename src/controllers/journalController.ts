@@ -4,7 +4,7 @@ import { success } from "../utils/apiResponse";
 
 export const createJournal = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     const journal = await journalService.createJournal(userId!, {
       content: req.body.content,
     });
@@ -17,7 +17,7 @@ export const createJournal = async (req: Request, res: Response, next: NextFunct
 
 export const getMyJournals = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id;
+    const userId = (req as any).user?.id;
     const journals = await journalService.getMyJournals(userId!);
 
     res.json(success("Your journals", journals));

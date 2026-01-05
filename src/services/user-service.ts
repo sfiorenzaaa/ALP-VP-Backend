@@ -55,7 +55,17 @@ export class UserService {
             throw new ResponseError(401, "Username or password wrong");
         }
 
-        return toUserResponse(user.id, user.username, user.email, user.role);
+        const jwtPayload = {
+            id : user.id,
+            username : user.username,
+            email : user.email,
+            role : user.role as any,
+        };
+
+        const token = generateToken(jwtPayload);
+
+        const response = toUserResponse(user.id, user.username, user.email, user.role);
+        return {...response, token:token}
     }
 
     

@@ -73,4 +73,30 @@ export class EventService {
             }
         })
     }
+
+    static async joinEvent(userId: number, eventId: number) {
+
+    const event = await prismaClient.event.findUnique({ where: { id: eventId } });
+    
+    if (!event) throw new ResponseError(404, "Event not found");
+    if (event.status !== "APPROVE") throw new ResponseError(400, "Cannot join unapproved event");
+
+    const existing = await prismaClient.participant.findUnique({
+        where: {
+            userId_eventId: { 
+                userId: userId,
+                eventId: eventId
+            }
+        }
+    });
+
+    if (existing) throw new ResponseError(400, "You already joined this event");
+
+    return await prismaClient.participant.create({
+        data: {
+            userId: userId,
+            eventId: eventId
+        }
+    });
+}
 }
