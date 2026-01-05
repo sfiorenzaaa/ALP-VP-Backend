@@ -11,11 +11,9 @@ export class EventService {
     static async create(user: any, request: any) {
         const eventData = Validation.validate(EventValidation.CREATE, request);
 
-
         if (!user || !user.id) {
             throw new ResponseError(401, "User not found or invalid token");
         }
-
 
         return await prismaClient.event.create({
             data: {

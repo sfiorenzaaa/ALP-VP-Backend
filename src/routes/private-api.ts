@@ -15,7 +15,7 @@ privateRouter.use(authMiddleware);
 
 privateRouter.post('/events', EventController.create);
 privateRouter.get('/events/my', EventController.listMine);
-privateRouter.get('/events/pending', authMiddleware, adminMiddleware, EventController.listPending);
+privateRouter.get('/events/pending', adminMiddleware, EventController.listPending);
 privateRouter.patch('/events/:id', adminMiddleware, EventController.approveReject)
 
 privateRouter.post("/songs", createSong);
