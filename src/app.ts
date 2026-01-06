@@ -24,6 +24,7 @@ app.use(express.json());
 
 app.use("/api", publicRouter);
 app.use("/api", privateRouter);
+
 app.use(errorHandler);
 
 export default app;
