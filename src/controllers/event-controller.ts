@@ -10,9 +10,10 @@ export class EventController {
         } catch (e) { next(e); }
     }
 
-    static async listPublic(req : Request, res: Response, next: NextFunction){
+    static async listPublic(req: any, res: any, next: any){
         try {
-            const result = await EventService.listPublicEvents();
+            const userId = req.user?.id;
+            const result = await EventService.listPublicEvents(userId);
             res.status(200).json({ data : result});
         } catch (e) {next(e);}
     }

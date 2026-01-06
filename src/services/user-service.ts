@@ -26,7 +26,7 @@ export class UserService {
                 username: registerRequest.username,
                 email: registerRequest.email,
                 password: password,
-                role: "USER" 
+                role: request.role ? request.role : undefined
             }
         });
 
