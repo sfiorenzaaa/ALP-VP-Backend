@@ -26,7 +26,7 @@ export class UserService {
                 username: registerRequest.username,
                 email: registerRequest.email,
                 password: password,
-                role: "USER" 
+                role: request.role ? request.role : undefined
             }
         });
 
@@ -44,11 +44,29 @@ export class UserService {
             throw new ResponseError(401, "Username or password wrong");
         }
 
+        console.log("=== DEBUG LOGIN ===");
+        console.log("Input Password:", loginRequest.password);
+        console.log("Email dari Android:", loginRequest.email);
+        console.log("DB Password   :", user.password);
+        
+
         const isPasswordValid = await bcrypt.compare(loginRequest.password, user.password);
         if (!isPasswordValid) {
             throw new ResponseError(401, "Username or password wrong");
         }
 
-        return toUserResponse(user.id, user.username, user.email, user.role);
+        const jwtPayload = {
+            id : user.id,
+            username : user.username,
+            email : user.email,
+            role : user.role as any,
+        };
+
+        const token = generateToken(jwtPayload);
+
+        const response = toUserResponse(user.id, user.username, user.email, user.role);
+        return {...response, token:token}
     }
+
+    
 }

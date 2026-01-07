@@ -1,7 +1,11 @@
 import express from "express";
 import { PetController } from "../controllers/pet-controller";
 import { validate } from "../middlewares/validate";
-import { createPetSchema, updatePetSchema, createActivitySchema } from "../validations/pet-validation";
+import {
+  createPetSchema,
+  updatePetSchema,
+  createActivitySchema
+} from "../utils/validations/pet-validation";
 
 const router = express.Router();
 

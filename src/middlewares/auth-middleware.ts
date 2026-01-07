@@ -9,7 +9,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
 
   try {
     const decoded = verifyToken(token);
-    req.user = decoded as any;
+    (req as any).user = decoded as any;
     next();
   } catch {
     return res.status(401).json({ message: "Invalid or expired token" });

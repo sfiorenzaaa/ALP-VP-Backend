@@ -42,6 +42,7 @@ model User {
   journals   Journal[]
   pet        Pet?
   activities UserActivityLog[]
+  joinedEvents Participant[]
 }
 
 model Event {
@@ -54,6 +55,7 @@ model Event {
 
   userId Int 
   user   User @relation(fields: [userId], references: [id]) 
+  participants Participant[]
 }
 
 model Journal {
@@ -62,6 +64,17 @@ model Journal {
   userId    Int
   content   String
   createdAt DateTime @default(now())
+}
+
+model Participant {
+  userId    Int
+  eventId   Int
+  joinedAt  DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@id([userId, eventId])
 }
 
 model Song {

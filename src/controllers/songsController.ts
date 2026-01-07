@@ -16,7 +16,8 @@ export const createSong = async (req: Request, res: Response, next: NextFunction
     const { clue, options, correctAnswer } = req.body;
 
     if (!clue || !options || !correctAnswer) {
-      return res.status(400).json({ message: "Missing required fields" });
+      res.status(400).json({ message: "Missing required fields" });
+      return
     }
 
     const song = await songsService.createSong({ clue, options, correctAnswer });

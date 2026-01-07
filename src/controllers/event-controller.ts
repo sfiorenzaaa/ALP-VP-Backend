@@ -10,9 +10,10 @@ export class EventController {
         } catch (e) { next(e); }
     }
 
-    static async listPublic(req : Request, res: Response, next: NextFunction){
+    static async listPublic(req: any, res: any, next: any){
         try {
-            const result = await EventService.listPublicEvents();
+            const userId = req.user?.id;
+            const result = await EventService.listPublicEvents(userId);
             res.status(200).json({ data : result});
         } catch (e) {next(e);}
     }
@@ -32,4 +33,23 @@ export class EventController {
             res.status(200).json({ data : result});
         } catch (e) {next(e);}
     }
+
+    static async listPending(req : Request, res : Response, next : NextFunction){
+        try{
+            const result = await EventService.listPendingEvents();
+            res.status(200).json({data : result});
+        } catch (e) {next(e);}
+    }
+
+    static async join(req: Request, res: Response, next: NextFunction) {
+    try {
+        const userId = (req as any).user.id;
+        const eventId = Number(req.params.id); 
+
+        const result = await EventService.joinEvent(userId, eventId);
+        res.status(200).json({ data: result, message: "Successfully joined event!" });
+    } catch (e) {
+        next(e);
+    }
+}
 }
